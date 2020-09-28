@@ -1,0 +1,13 @@
+{
+  "actions" : {
+    "build" : {
+      "enabled" : true,
+      "script" : "if [ $NOVA_TASK_NAME == \"build\" ]; then\n\tnpm run build\nfi\n\nif [ $NOVA_TASK_NAME == \"run\" ]; then\n\tnpm run watch\nfi"
+    },
+    "run" : {
+      "enabled" : true,
+      "script" : "if [ $NOVA_TASK_NAME == \"build\" ]; then\n\tnpm run build\nfi\n\nif [ $NOVA_TASK_NAME == \"run\" ]; then\n\tnpm run watch\nfi"
+    }
+  },
+  "identifier" : "670A0252-836E-4F59-9049-A5948E2145A1"
+}
