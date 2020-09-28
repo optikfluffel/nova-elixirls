@@ -4,13 +4,30 @@
     "organization": "brandc",
     "description": "Lorem ipsum, dolor sit amet.",
     "version": "1.0",
-    "categories": ["languages"],
+    "categories": ["languages", "issues"],
     
     "main": "main.dist.js",
+    
+    "activationEvents": [
+        "onLanguage:elixir"
+    ],
     
     "entitlements": {
         "process": true,
         "filesystem": "readonly"
+    },
+    
+    "issueMatchers": {
+        "mixCompileError": {
+            "pattern": {
+                "regexp": "^\\*\\* \\((\\w+)\\) (.*):(\\d+): (.*)$",
+                "message": 1,
+                "code": 2,
+                "file": 3,
+                "line": 4,
+                "severity": "error"
+            }
+        }
     },
     
     "config": [
@@ -19,6 +36,6 @@
             "title": "Language Server Path",
             "type": "path",
             "placeholder": "/usr/local/bin/example"
-        }
+        },
     ]
 }
