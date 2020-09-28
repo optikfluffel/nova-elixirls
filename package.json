@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-      "build": "npx rollup -c",
+      "build": "npx rollup -c && cd elixir-ls && mix deps.get && mix elixir_ls.release -o ../nova-elixirls.novaextension/elixir-ls-release",
       "watch": "onchange -i \"src/**/*.js\" -- npm run build"
   },
   "keywords": [],

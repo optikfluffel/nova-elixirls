@@ -2,8 +2,8 @@ var langserver = null;
 
 exports.activate = function() {
     // Do work when the extension is activated
-    langserver = new ExampleLanguageServer();
-}
+    langserver = new ElixirLanguageServer();
+};
 
 exports.deactivate = function() {
     // Clean up state before the extension is deactivated
@@ -11,13 +11,12 @@ exports.deactivate = function() {
         langserver.deactivate();
         langserver = null;
     }
-}
+};
 
-
-class ExampleLanguageServer {
+class ElixirLanguageServer {
     constructor() {
         // Observe the configuration setting for the server's location, and restart the server on change
-        nova.config.observe('example.language-server-path', function(path) {
+        nova.config.observe("example.language-server-path", function(path) {
             this.start(path);
         }, this);
     }
@@ -34,7 +33,7 @@ class ExampleLanguageServer {
         
         // Use the default server path
         if (!path) {
-            path = '/usr/local/bin/example';
+            path = nova.extension.path + "/elixir-ls-release/language_server.sh";
         }
         
         // Create the client
@@ -43,9 +42,13 @@ class ExampleLanguageServer {
         };
         var clientOptions = {
             // The set of document syntaxes for which the server is valid
-            syntaxes: ['javascript']
+            syntaxes: [
+                "elixir",
+                "eex",
+                "html-eex"
+            ],
         };
-        var client = new LanguageClient('example-langserver', 'Example Language Server', serverOptions, clientOptions);
+        var client = new LanguageClient("elixir", "ElixirLS", serverOptions, clientOptions);
         
         try {
             // Start the client
