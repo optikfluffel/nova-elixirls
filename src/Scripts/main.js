@@ -3,20 +3,6 @@ var langserver = null;
 exports.activate = function() {
     // Do work when the extension is activated
     langserver = new ElixirLanguageServer();
-    
-    nova.workspace.onDidAddTextEditor((editor) => {
-        let document = editor.document;
-        
-        if (!["elixir", "eex", "html+eex"].includes(document.syntax)) return;
-        
-        editor.onWillSave(() => {
-            langserver.languageClient.sendNotification("textDocument/didSave", {
-                textDocument: {
-                    uri: document.uri
-                }
-            });
-        });
-    });
 };
 
 exports.deactivate = function() {
@@ -27,9 +13,30 @@ exports.deactivate = function() {
     }
 };
 
-class ElixirLanguageServer {
+class ElixirLanguageServer {    
     constructor() {
-        this.start();
+        nova.config.observe("elixirLS.dialyzerEnabled", function(enabled) {
+            if (enabled) {
+                this.start();
+            } else {
+                this.stop();
+            }
+        }, this);
+        
+        nova.workspace.onDidAddTextEditor((editor) => {
+            let document = editor.document;
+            
+            if (!["elixir", "eex", "html+eex"].includes(document.syntax)) return;
+            
+            editor.onWillSave(() => {
+                if (!this.languageClient) return;
+                this.languageClient.sendNotification("textDocument/didSave", {
+                    textDocument: {
+                        uri: document.uri
+                    }
+                });
+            });
+        });
     }
  
     deactivate() {
@@ -72,10 +79,10 @@ class ElixirLanguageServer {
             // Add the client to the subscriptions to be cleaned up
             nova.subscriptions.add(client);
             this.languageClient = client;
+            console.log("Elixir language server started.");
         }
         catch (err) {
             // If the .start() method throws, it's likely because the path to the language server is invalid
-            
             if (nova.inDevMode()) {
                 console.error(err);
             }
