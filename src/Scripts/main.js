@@ -29,10 +29,7 @@ exports.deactivate = function() {
 
 class ElixirLanguageServer {
     constructor() {
-        // Observe the configuration setting for the server's location, and restart the server on change
-        nova.config.observe("example.language-server-path", function() {
-            this.start();
-        }, this);
+        this.start();
     }
  
     deactivate() {
