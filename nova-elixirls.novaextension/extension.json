@@ -4,7 +4,7 @@
     "organization": "brandc",
     "description": "Provides Elixir language support powered by the Elixir Language Server (ElixirLS).",
     "version": "0.1",
-    "categories": ["languages"],
+    "categories": ["languages", "completions"],
     "repository": "https://github.com/brandc87/nova-elixirls",
     "bugs": "https://github.com/brandc87/nova-elixirls/issues",
     
