@@ -78,8 +78,7 @@
             "title": "Mix Environment",
             "description": "Mix environment to use for compilation",
             "type": "string",
-            "default": "test",
-            
+            "default": "test"
         },
         {
             "key": "elixirLS.trace.server",
