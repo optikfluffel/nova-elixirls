@@ -19,7 +19,7 @@
     
     "entitlements": {
         "process": true,
-        "filesystem": "readwrite"
+        "filesystem": "readonly"
     },
     
     "issueMatchers": {
