@@ -14,4 +14,4 @@ module.exports =
         file: "nova-elixirls.novaextension/Scripts/main.dist.js",
         format: "cjs"
     },
-}
+};

@@ -1,41 +1,97 @@
 {
     "identifier": "brandc.novaelixirls",
-    "name": "nova-elixirls",
+    "name": "ElixirLS",
     "organization": "brandc",
-    "description": "Lorem ipsum, dolor sit amet.",
-    "version": "1.0",
-    "categories": ["languages", "issues"],
+    "description": "Provides Elixir language support powered by the Elixir Language Server (ElixirLS).",
+    "version": "0.1",
+    "categories": ["languages"],
+    "repository": "https://github.com/brandc87/nova-elixirls",
+    "bugs": "https://github.com/brandc87/nova-elixirls/issues",
     
     "main": "main.dist.js",
     
     "activationEvents": [
-        "onLanguage:elixir"
+        "onWorkspaceContains:*.ex,*.eex,*.html.eex",
+        "onLanguage:elixir",
+        "onLanguage:eex",
+        "onLanguage:html-eex"
     ],
     
     "entitlements": {
         "process": true,
-        "filesystem": "readonly"
+        "filesystem": "readwrite"
     },
     
     "issueMatchers": {
         "mixCompileError": {
             "pattern": {
                 "regexp": "^\\*\\* \\((\\w+)\\) (.*):(\\d+): (.*)$",
-                "message": 1,
-                "code": 2,
-                "file": 3,
-                "line": 4,
+                "message": 0,
+                "code": 1,
+                "file": 2,
+                "line": 3,
                 "severity": "error"
+            }
+        },
+        "mixCompileWarning": {
+            "pattern": {
+                "regexp": "^warning: (.*)$",
+                "message": 0,
+                "code": 1,
+                "file": 2,
+                "line": 3,
+                "severity": "warning"
+            },
+            "pattern": {
+                "regexp": "^  (.*):(\\d+)(.*)$",
+                "message": 0,
+                "code": 1,
+                "file": 2,
+                "line": 3,
+                "severity": "warning"
             }
         }
     },
     
     "config": [
         {
-            "key": "example.language-server-path",
-            "title": "Language Server Path",
-            "type": "path",
-            "placeholder": "/usr/local/bin/example"
+            "key": "elixirLS.dialyzerEnabled",
+            "title": "Dialyzer Enabled",
+            "description": "Run ElixirLS's rapid Dialyzer when code is saved",
+            "type": "boolean",
+            "default": true
         },
+        {
+            "key": "elixirLS.dialyzerFormat",
+            "title": "Dialyzer Formatter",
+            "description": "Formatter to use for Dialyzer warnings",
+            "type": "enum",
+            "values": [
+                "dialyzer",
+                "dialyzer_short",
+                "dialyzer_long"
+            ],
+            "default": "dialyzer_long"
+        },
+        {
+            "key": "elixirLS.mixEnv",
+            "title": "Mix Environment",
+            "description": "Mix environment to use for compilation",
+            "type": "string",
+            "default": "test",
+            
+        },
+        {
+            "key": "elixirLS.trace.server",
+            "title": "Trace",
+            "description": "Traces the communication between VS Code and the Elixir language server.",
+            "type": "enum",
+            "values": [
+                "off",
+                "messages",
+                "verbose"
+            ],
+            "default": "off"
+        }
     ]
 }

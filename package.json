@@ -1,15 +1,15 @@
 {
   "name": "nova-elixirls",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
       "build": "npx rollup -c && cd elixir-ls && mix deps.get && mix elixir_ls.release -o ../nova-elixirls.novaextension/elixir-ls-release",
       "watch": "onchange -i \"src/**/*.js\" -- npm run build"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Carl Brand",
+  "license": "MIT",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^15.1.0",
     "@rollup/plugin-node-resolve": "^9.0.0",

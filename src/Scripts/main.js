@@ -3,6 +3,20 @@ var langserver = null;
 exports.activate = function() {
     // Do work when the extension is activated
     langserver = new ElixirLanguageServer();
+    
+    nova.workspace.onDidAddTextEditor((editor) => {
+        let document = editor.document;
+        
+        if (!["elixir", "eex", "html+eex"].includes(document.syntax)) return;
+        
+        editor.onWillSave(() => {
+            langserver.languageClient.sendNotification("textDocument/didSave", {
+                textDocument: {
+                    uri: document.uri
+                }
+            });
+        });
+    });
 };
 
 exports.deactivate = function() {
@@ -16,43 +30,47 @@ exports.deactivate = function() {
 class ElixirLanguageServer {
     constructor() {
         // Observe the configuration setting for the server's location, and restart the server on change
-        nova.config.observe("example.language-server-path", function(path) {
-            this.start(path);
+        nova.config.observe("example.language-server-path", function() {
+            this.start();
         }, this);
     }
-    
+ 
     deactivate() {
         this.stop();
     }
     
-    start(path) {
+    start() {
         if (this.languageClient) {
             this.languageClient.stop();
             nova.subscriptions.remove(this.languageClient);
         }
-        
-        // Use the default server path
-        if (!path) {
-            path = nova.extension.path + "/elixir-ls-release/language_server.sh";
-        }
-        
+
         // Create the client
         var serverOptions = {
-            path: path
+            path: nova.extension.path + "/elixir-ls-release/language_server.sh",
         };
         var clientOptions = {
-            // The set of document syntaxes for which the server is valid
             syntaxes: [
                 "elixir",
-                "eex",
-                "html-eex"
-            ],
+                "html+eex",
+                "eex"
+            ]
         };
-        var client = new LanguageClient("elixir", "ElixirLS", serverOptions, clientOptions);
+        var client = new LanguageClient("elixir", "Elixir Language Server", serverOptions, clientOptions);
         
         try {
             // Start the client
             client.start();
+                        
+            client.sendNotification("workspace/didChangeConfiguration", {
+                settings: {
+                    "elixirLS": {
+                        "dialyzerEnabled": nova.config.get("elixirLS.dialyzerEnabled"),
+                        "dialyzerFormat": nova.config.get("elixirLS.dialyzerFormat"),
+                        "mixEnv": nova.config.get("elixirLS.mixEnv"),
+                    }
+                }
+            });
             
             // Add the client to the subscriptions to be cleaned up
             nova.subscriptions.add(client);
