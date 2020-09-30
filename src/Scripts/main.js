@@ -48,10 +48,25 @@ class ElixirLanguageServer {
             this.languageClient.stop();
             nova.subscriptions.remove(this.languageClient);
         }
+        
+        // Check and extract language server
+        const fixLangServerprocess = new Process("/usr/bin/env", {
+            args: ["chmod", "755", nova.path.join(nova.extension.path, "elixir-ls/language_server.sh")],
+            cwd: nova.extension.path
+        });
 
+        fixLangServerprocess.start();
+        
+        const fixLaunchServerprocess = new Process("/usr/bin/env", {
+            args: ["chmod", "755", nova.path.join(nova.extension.path, "elixir-ls/launch.sh")],
+            cwd: nova.extension.path
+        });
+
+        fixLaunchServerprocess.start();
+        
         // Create the client
         var serverOptions = {
-            path: nova.extension.path + "/elixir-ls-release/language_server.sh",
+            path: nova.extension.path + "/elixir-ls/language_server.sh",
         };
         var clientOptions = {
             syntaxes: [
@@ -82,6 +97,7 @@ class ElixirLanguageServer {
             console.log("Elixir language server started.");
         }
         catch (err) {
+            console.log(err);
             // If the .start() method throws, it's likely because the path to the language server is invalid
             if (nova.inDevMode()) {
                 console.error(err);
